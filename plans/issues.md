@@ -157,6 +157,37 @@ installation and model storage all need validation from inside the sandbox.
 
 **Answer when:** after M2; the deb (ADR-005) is unblocked regardless.
 
+### Q-009: How does dictate know WezTerm is the *focused application* at recording start?
+
+| Field      | Value      |
+| ---------- | ---------- |
+| Status     | Open       |
+| Priority   | High       |
+| Discovered | Spec review (§10.5, risk R5) |
+| Module     | WEZ, HOT   |
+
+**Context:** GNOME Wayland exposes no "which application has focus" API to
+ordinary clients. The WezTerm plugin can report WezTerm's focused *pane*,
+but not whether WezTerm itself is the active window. If the user focuses
+Firefox and starts dictation, the daemon still sees a valid last-known pane
+and would deliver there — technically per the snapshot rules, but likely not
+what the user meant.
+
+**Options considered:**
+
+1. Accept "last-known WezTerm pane" semantics, config-gated (e.g. a
+   staleness window on focus reports) — no new components, occasionally
+   surprising.
+2. Small GNOME Shell extension exposing the focused app ID to the daemon —
+   accurate, but a new install-and-maintain surface (currently listed as a
+   future capability; may need pulling forward to MVP 2).
+3. Have the WezTerm plugin report focus-gained *and* focus-lost, so a blurred
+   WezTerm clears the target and dictation falls back to clipboard —
+   middle ground, still blind to what gained focus.
+
+**Answer when:** WEZ-001 design; option 3 vs 2 should be decided before
+MVP 2 acceptance criteria are tested.
+
 ---
 
 ## Resolved
