@@ -627,6 +627,12 @@ signals (the WezTerm plugin reporting focus, the IBus engine owning the input
 context) rather than global window introspection. When no integration can
 identify the target, the snapshot is `Clipboard`.
 
+A known gap follows from this: an integration can report *its own* focus
+state (e.g. WezTerm's focused pane) but cannot prove it is the focused
+application overall. Whether to accept last-known-target semantics, have
+integrations also report focus loss, or add a small GNOME Shell extension is
+tracked as Q-009 and must be resolved before MVP 2 acceptance testing.
+
 ## 10.6 WezTerm integration
 
 The WezTerm adapter is a core MVP feature.
@@ -1708,7 +1714,13 @@ Resolved decisions are recorded as ADRs in
 Open questions are tracked in [`plans/issues.md`](../plans/issues.md)
 (Q-001…): speech worker wire protocol, default model choice, clipboard
 backend, whisper.cpp build-vs-download, WezTerm plugin push-vs-pull focus,
-audio process isolation, IBus packaging, and Flatpak viability.
+audio process isolation, IBus packaging, Flatpak viability, and
+focused-application detection at recording start (Q-009).
+
+The three highest-risk unknowns are attacked up front by validation spikes
+(Phase 0, [`plans/modules/00-spikes.aps.md`](../plans/modules/00-spikes.aps.md)):
+focus-less clipboard writes, portal press/release reliability, and WezTerm
+send-text byte behaviour.
 
 ---
 
@@ -1719,6 +1731,7 @@ Delivery is planned and tracked through APS in
 
 | Phase | Content | APS modules |
 | ----- | ------- | ----------- |
+| 0 — Validation spikes | Focus-less clipboard write, portal press/release reliability, WezTerm send-text bytes (half-day throwaways; parallel with Phase 1) | `00-spikes` |
 | 1 — Daemon and audio | Workspace, daemon lifecycle, IPC, PipeWire capture, state machine, CLI, notifications | `01-core`, `02-audio`, `05-delivery` (feedback) |
 | 2 — Transcription | whisper.cpp worker, model management, warm lifecycle, normalisation, failure recovery | `03-stt`, `04-text` |
 | 3 — Clipboard product (MVP 1) | GNOME toggle shortcut, clipboard adapter, last-transcript recovery, Debian packaging, diagnostics | `05-delivery`, `06-hotkeys`, `08-packaging` |
@@ -1770,6 +1783,7 @@ A feature is complete when:
 
 | Spec area | Sections | APS module |
 | --------- | -------- | ---------- |
+| Platform validation spikes | §27 (R1, R2, R4), §29 Phase 0 | [00-spikes](../plans/modules/00-spikes.aps.md) |
 | Daemon, state machine, IPC, CLI, config | §10.1, §10.2, §13, §15, §16 | [01-core](../plans/modules/01-core.aps.md) |
 | Audio capture | §10.3 | [02-audio](../plans/modules/02-audio.aps.md) |
 | Speech recognition | §10.4 | [03-stt](../plans/modules/03-stt.aps.md) |

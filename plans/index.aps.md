@@ -51,12 +51,20 @@ Prioritised queue of ready work:
 
 | #   | Work Item | Module                                | Owner       | Status |
 | --- | --------- | ------------------------------------- | ----------- | ------ |
-| 1   | CORE-001  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
-| 2   | CORE-002  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
-| 3   | CORE-003  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
-| 4   | CORE-004  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
-| 5   | CORE-005  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
-| 6   | AUD-001   | [audio](./modules/02-audio.aps.md)    | @joshuaboys | Ready  |
+| 1   | SPK-001   | [spikes](./modules/00-spikes.aps.md)  | @joshuaboys | Ready  |
+| 2   | SPK-002   | [spikes](./modules/00-spikes.aps.md)  | @joshuaboys | Ready  |
+| 3   | SPK-003   | [spikes](./modules/00-spikes.aps.md)  | @joshuaboys | Ready  |
+| 4   | CORE-001  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
+| 5   | CORE-002  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
+| 6   | CORE-003  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
+| 7   | CORE-004  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
+| 8   | CORE-005  | [core](./modules/01-core.aps.md)      | @joshuaboys | Ready  |
+| 9   | AUD-001   | [audio](./modules/02-audio.aps.md)    | @joshuaboys | Ready  |
+
+The three spikes attack the plan's biggest platform unknowns (clipboard
+without focus, portal press/release, WezTerm send-text bytes). They are
+half-day throwaways and can run in parallel with CORE-001; SPK-001 should
+land before DLV-002 is designed.
 
 <!-- Update this table as work items complete or priorities shift -->
 
@@ -64,6 +72,7 @@ Prioritised queue of ready work:
 
 | Module                                        | ID   | Purpose                                            | Status | Priority | Dependencies |
 | --------------------------------------------- | ---- | -------------------------------------------------- | ------ | -------- | ------------ |
+| [spikes](./modules/00-spikes.aps.md)          | SPK  | Platform validation spikes (clipboard, portal, WezTerm bytes) | Ready | high | — |
 | [core](./modules/01-core.aps.md)              | CORE | Daemon, session state machine, IPC, CLI, config    | Ready  | high     | —            |
 | [audio](./modules/02-audio.aps.md)            | AUD  | PipeWire capture, devices, VAD                     | Ready  | high     | core         |
 | [stt](./modules/03-stt.aps.md)                | STT  | whisper.cpp worker, model lifecycle                | Ready  | high     | core, audio  |
@@ -148,3 +157,5 @@ Tracked in [issues.md](./issues.md):
 - [ ] Q-006 — Separate audio process for crash isolation?
 - [ ] Q-007 — IBus components as a separate Debian package?
 - [ ] Q-008 — Flatpak viability
+- [ ] Q-009 — Detecting the focused *application* (not just the focused
+      WezTerm pane) at recording start
