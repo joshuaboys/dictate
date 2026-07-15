@@ -43,6 +43,8 @@ input.
 Change status to **Ready** when:
 
 - [ ] MVP 2 (WezTerm daily driver) is accepted
+- [ ] Q-010 (proceed with MVP 3 given Vocalinux?) is answered in favour of
+      building this
 - [ ] Q-007 (separate IBus package?) is answered
 - [ ] Engine/daemon IPC design is sketched in a design doc
 - [ ] At least one work item defined

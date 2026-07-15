@@ -188,6 +188,32 @@ what the user meant.
 **Answer when:** WEZ-001 design; option 3 vs 2 should be decided before
 MVP 2 acceptance criteria are tested.
 
+### Q-010: Should MVP 3 (general desktop insertion) proceed as scoped, given Vocalinux?
+
+| Field      | Value       |
+| ---------- | ----------- |
+| Status     | Deferred    |
+| Priority   | Medium      |
+| Discovered | Prior-art review (spec §2.1) |
+| Module     | IBUS, SET   |
+
+**Context:** Vocalinux (GPLv3, Python) already serves general desktop
+dictation on Linux via IBus, with an active community. dictate's
+differentiators — target snapshot, terminal safety, portal-native plumbing,
+daemon/CLI — are all delivered by MVP 1–2. MVP 3 is the point where dictate
+starts competing head-on with a project that has a substantial head start,
+and its IBus layer is Vocalinux's documented maintenance tarpit.
+
+**Options considered:**
+
+1. Proceed as scoped — full IBus engine + settings app.
+2. Slim MVP 3 — settings app and per-application modes, keep clipboard as
+   the general-desktop path, skip IBus.
+3. Drop MVP 3 — position dictate purely as the terminal dictation tool and
+   recommend Vocalinux for general desktop use.
+
+**Answer when:** MVP 2 is accepted; re-assess the landscape then.
+
 ---
 
 ## Resolved

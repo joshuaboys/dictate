@@ -16,7 +16,9 @@ detection, and duration limits enforced.
 
 - PipeWire input-device enumeration and explicit selection.
 - Mono PCM capture, resampled to the engine's required rate (16 kHz).
-- Configurable noise gate and voice activity detection.
+- Configurable noise gate and voice activity detection (neural VAD with an
+  amplitude-threshold fallback — see spec §10.3; Silero/ONNX is the
+  field-proven candidate).
 - Minimum/maximum recording duration enforcement.
 - Device-loss detection during capture.
 - In-memory-only buffers by default.

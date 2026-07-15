@@ -109,10 +109,13 @@ land before DLV-002 is designed.
 - **Target:** end of Phase 5
 - **Includes:** wezterm, text (terminal mode), hotkeys (portal PTT + overlay)
 
-### M3: Desktop insertion (MVP 3)
+### M3: Desktop insertion (MVP 3) — conditional
 
 - **Target:** end of Phase 6
 - **Includes:** ibus, settings
+- **Gate:** re-evaluated against the landscape when M2 is accepted — MVP 3
+  competes head-on with Vocalinux's general-desktop offering (spec §2.1,
+  Q-010); scope may slim to settings-only or be dropped.
 
 ## Risks & Mitigations
 
@@ -159,3 +162,5 @@ Tracked in [issues.md](./issues.md):
 - [ ] Q-008 — Flatpak viability
 - [ ] Q-009 — Detecting the focused *application* (not just the focused
       WezTerm pane) at recording start
+- [ ] Q-010 — Whether MVP 3 proceeds as scoped, given Vocalinux already
+      covers general desktop dictation

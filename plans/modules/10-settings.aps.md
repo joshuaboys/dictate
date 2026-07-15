@@ -42,7 +42,8 @@ preferences, vocabulary, privacy toggles and diagnostics.
 
 Change status to **Ready** when:
 
-- [ ] MVP 2 is accepted and MVP 3 planning starts
+- [ ] MVP 2 is accepted and MVP 3 planning starts (see Q-010 for MVP 3
+      scope re-evaluation)
 - [ ] Config read/write over IPC (vs direct file edit + reload) is decided
 - [ ] At least one work item defined
 

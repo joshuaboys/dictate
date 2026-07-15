@@ -77,6 +77,45 @@ limitations:
 `dictate` provides a fast, private and predictable dictation experience
 designed specifically for modern Linux desktop environments.
 
+## 2.1 Prior art
+
+The closest existing project is
+[Vocalinux](https://github.com/jatinkrmalik/vocalinux): a Python/GTK tray
+application (GPLv3, active beta) offering offline dictation with whisper.cpp
+by default (plus OpenAI Whisper and VOSK), Silero neural VAD, toggle and
+push-to-talk activation, and IBus-based text injection on Wayland with
+X11-tool clipboard fallback.
+
+What it validates for this spec: the demand exists, whisper.cpp with a
+local-first posture is the right engine choice, neural VAD is practical, and
+IBus injection on GNOME Wayland works — though its changelog shows IBus to be
+a recurring maintenance burden, which supports keeping IBus out of dictate's
+critical path until MVP 3.
+
+Where `dictate` deliberately differs:
+
+- **Target snapshot.** Vocalinux injects into whatever is focused at
+  delivery time; `dictate` captures the target when recording starts and
+  never retargets (§10.5, ADR-003).
+- **Terminal-first.** Vocalinux treats terminals like any GUI app, with no
+  pane addressing, mux awareness or submission-safety guarantees; `dictate`'s
+  core is pane-addressed WezTerm delivery under a never-Enter invariant
+  (§10.6, §18.5).
+- **Wayland-native plumbing.** `dictate` uses the Global Shortcuts portal and
+  data-control clipboard rather than custom hotkey grabbing and
+  XWayland-era clipboard tools (§8.1, §10.8).
+- **Service architecture.** A supervised daemon with IPC, a scriptable CLI
+  and `doctor` diagnostics, rather than a tray app on XDG autostart (§10.1).
+
+Positioning: Vocalinux already serves general desktop dictation on Linux;
+`dictate`'s defensible ground is terminal-first dictation with delivery
+guarantees. MVP 3 (general desktop insertion) overlaps Vocalinux directly
+and is re-evaluated when it becomes current (Q-010).
+
+Licensing boundary: Vocalinux is GPLv3 — study its behaviour, documentation
+and issue history freely, but do not port its code unless `dictate` adopts a
+GPL-compatible licence (§21.4).
+
 ---
 
 # 3. Product principles
@@ -557,7 +596,9 @@ The audio subsystem must:
 - Capture mono PCM audio.
 - Resample to the speech model's required sample rate (16 kHz for Whisper).
 - Support configurable noise gating.
-- Support configurable voice activity detection.
+- Support configurable voice activity detection. A neural VAD (e.g. Silero
+  via ONNX runtime, proven in Vocalinux) is the preferred approach, with an
+  amplitude-threshold fallback where the runtime is unavailable.
 - Maintain audio only in memory by default.
 - Stop cleanly when the user cancels or releases the shortcut.
 - Bound memory use via the maximum recording duration (§16).
@@ -1444,6 +1485,9 @@ Flatpak must not block the initial Debian-package delivery (Q-008).
   keeps package size acceptable.
 - The project licence should be chosen before the first public release
   (suggested: MIT or Apache-2.0, matching the Rust ecosystem norm).
+- Vocalinux (§2.1) is GPLv3: its behaviour, documentation and issue history
+  are fair study material, but its code must not be ported into `dictate`
+  unless the project deliberately adopts a GPL-compatible licence.
 
 ---
 
@@ -1603,6 +1647,11 @@ MVP 3 includes:
 - Per-application modes.
 - Vocabulary and phrase replacement.
 - Optional pre-edit transcript display.
+
+MVP 3 is a conditional milestone: it competes directly with Vocalinux's
+established general-desktop offering (§2.1), so its scope is re-evaluated
+against the landscape when MVP 2 is accepted (Q-010) rather than treated as
+committed.
 
 ---
 
