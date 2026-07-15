@@ -1,0 +1,23 @@
+# .aps/config.yml — written by installer, read by updater
+
+# Project contract (INSTALL-014 / D-035): toolchain pin + runtime path
+# defaults the global 'aps' binary discovers by walking up from cwd.
+cli_version: "0.5.0"
+plans_dir: plans/
+docs_dir: docs/
+tooling_root: .aps/
+
+aps:
+  version: "0.5.0"
+  config_schema: 1
+  installed: "2026-07-15"
+  updated: "2026-07-15"
+
+project:
+  type: simple
+  monorepo_tool: ~
+  profile: solo
+
+tools:
+  - name: generic
+    # No tool integration — run 'aps setup' to add one
