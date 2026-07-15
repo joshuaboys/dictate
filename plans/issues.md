@@ -1,30 +1,16 @@
 # Issues & Questions Tracker
 
-> Development-time discoveries that emerge while building. Not a bug tracker replacement — a lightweight log for planning-level concerns that need visibility.
+> Development-time discoveries that emerge while building. Not a bug tracker
+> replacement — a lightweight log for planning-level concerns that need
+> visibility.
 
 ---
 
 ## Issues
 
 <!--
-Issues are problems discovered during development.
-ID format: ISS-NNN (e.g., ISS-001)
-Status: Open | Resolved | Deferred | Won't Fix
+ID format: ISS-NNN · Status: Open | Resolved | Deferred | Won't Fix
 Severity: Critical | High | Medium | Low
-
-Example:
-### ISS-001: API rate limits lower than expected
-
-| Field | Value |
-|-------|-------|
-| Status | Open |
-| Severity | Medium |
-| Discovered | AUTH-002 |
-| Module | AUTH |
-
-**Context:** During load testing, discovered the API rate-limits at 100 req/min, not 1000 as documented.
-
-**Impact:** Will need retry logic or batching for bulk operations.
 -->
 
 _(No issues yet)_
@@ -34,38 +20,146 @@ _(No issues yet)_
 ## Questions
 
 <!--
-Questions are unknowns that emerged during development.
-ID format: Q-NNN (e.g., Q-001)
-Status: Open | Answered | Deferred
+ID format: Q-NNN · Status: Open | Answered | Deferred
 Priority: High | Medium | Low
-
-Example:
-### Q-001: Should retry logic live in the client or transport layer?
-
-| Field | Value |
-|-------|-------|
-| Status | Open |
-| Priority | Medium |
-| Discovered | AUTH-002 |
-| Assigned | @username |
-
-**Context:** Found we need retry logic for rate limits. Unclear where this belongs architecturally.
-
-**Options considered:**
-1. Client layer — simpler, but each client reimplements
-2. Transport layer — centralized, but may hide failures
 -->
 
-_(No questions yet)_
+### Q-001: Speech worker wire protocol — stay on JSON Lines or move to binary?
+
+| Field      | Value            |
+| ---------- | ---------------- |
+| Status     | Open             |
+| Priority   | Medium           |
+| Discovered | Spec §27 / ADR-001 |
+| Module     | STT              |
+
+**Context:** ADR-001 starts the daemon↔worker protocol on JSON Lines for
+debuggability. Audio buffers are the only high-volume payload.
+
+**Options considered:**
+
+1. JSON Lines + base64 audio — trivial to debug, wasteful for PCM.
+2. JSON Lines control + raw PCM side-channel (fd/socket) — likely sweet spot.
+3. Framed binary (MessagePack/custom) — fastest, hardest to inspect.
+
+**Answer when:** STT-001/STT-002 profiling shows whether serialisation cost
+matters.
+
+### Q-002: Default speech model — `small.en` or multilingual `small`?
+
+| Field      | Value    |
+| ---------- | -------- |
+| Status     | Open     |
+| Priority   | Medium   |
+| Discovered | Spec §27 |
+| Module     | STT      |
+
+**Context:** `small.en` is more accurate and faster for English; the
+multilingual model serves non-English users out of the box. Spec's config
+example assumes `small.en`.
+
+**Answer when:** STT-003 defines the model catalogue; decide with real
+latency/accuracy numbers on representative hardware.
+
+### Q-003: Clipboard backend on GNOME Wayland
+
+| Field      | Value       |
+| ---------- | ----------- |
+| Status     | Open        |
+| Priority   | High        |
+| Discovered | Spec §10.8  |
+| Module     | DLV         |
+
+**Context:** A focus-less daemon can't use the core `wl_data_device`
+clipboard. Mutter supports `wlr-data-control` since GNOME 44, and newer
+stacks add `ext-data-control`.
+
+**Options considered:**
+
+1. `wl-clipboard-rs` (data-control protocols) — in-process, no focus needed.
+2. Shelling out to `wl-copy` — extra dependency, same protocols.
+3. GTK/portal clipboard — needs a focused surface; wrong shape for a daemon.
+
+**Answer when:** DLV-002 is implemented and doctor's clipboard round-trip
+check passes on current Ubuntu LTS.
+
+### Q-004: whisper.cpp — vendored build, system dependency, or downloaded worker?
+
+| Field      | Value    |
+| ---------- | -------- |
+| Status     | Open     |
+| Priority   | Medium   |
+| Discovered | Spec §27 |
+| Module     | STT, PKG |
+
+**Context:** Affects deb size, hardware-accelerated variants, and security
+update responsibility.
+
+**Answer when:** PKG-003 packaging work forces the choice.
+
+### Q-005: WezTerm plugin — push focus events or query on demand?
+
+| Field      | Value    |
+| ---------- | -------- |
+| Status     | Open     |
+| Priority   | Medium   |
+| Discovered | Spec §27 |
+| Module     | WEZ      |
+
+**Context:** Push gives an always-fresh snapshot but a chattier plugin;
+pull (query at recording start) is simpler but adds latency inside the
+100 ms target-snapshot budget. `wezterm cli` querying may suffice without
+the plugin for common cases.
+
+**Answer when:** WEZ-001 latency measurements exist.
+
+### Q-006: Separate audio process for crash isolation?
+
+| Field      | Value    |
+| ---------- | -------- |
+| Status     | Deferred |
+| Priority   | Low      |
+| Discovered | Spec §27 |
+| Module     | AUD      |
+
+**Context:** The speech worker is already isolated (ADR-001). PipeWire
+client code is comparatively safe Rust; a separate audio process adds IPC
+for unclear benefit.
+
+**Revisit if:** audio-related daemon crashes appear in practice.
+
+### Q-007: Should IBus components ship as a separate Debian package?
+
+| Field      | Value    |
+| ---------- | -------- |
+| Status     | Deferred |
+| Priority   | Low      |
+| Discovered | Spec §27 |
+| Module     | IBUS, PKG |
+
+**Context:** IBus is MVP 3 and optional; a separate package keeps the base
+install lean and avoids pulling input-method dependencies onto
+terminal-only users.
+
+**Answer when:** 09-ibus moves to Ready.
+
+### Q-008: Is Flatpak worth the host-integration complexity?
+
+| Field      | Value      |
+| ---------- | ---------- |
+| Status     | Deferred   |
+| Priority   | Low        |
+| Discovered | Spec §21.3 |
+| Module     | PKG        |
+
+**Context:** Portals fit Flatpak, but WezTerm CLI access, host sockets, IBus
+installation and model storage all need validation from inside the sandbox.
+
+**Answer when:** after M2; the deb (ADR-005) is unblocked regardless.
 
 ---
 
 ## Resolved
-
-<!--
-Move resolved issues and answered questions here.
-Keep for 1-2 sprints as reference, then archive or delete.
--->
 
 _(Nothing resolved yet)_
 
